@@ -39,7 +39,6 @@ public class PlayerStick : MonoBehaviour
             if (counter != null)
 
             {
-                Debug.Log("PlayerCounter ‚É AddPlayer ‚ğŒÄ‚Ño‚·");
                 counter.AddPlayer();
             }
         }
