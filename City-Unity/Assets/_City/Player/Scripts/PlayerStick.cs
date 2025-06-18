@@ -1,0 +1,53 @@
+using UnityEngine;
+
+public class PlayerStick : MonoBehaviour
+{
+    private bool hasStuck = false;
+
+    private void OnTriggerEnter2D(Collider2D other)
+    {
+        if (hasStuck)
+        {
+            return;
+        }
+
+        //的に刺さった時
+        if (other.CompareTag("Target"))
+        {
+            hasStuck = true;
+
+            //的にくっつけて回転
+            transform.SetParent(other.transform);
+
+            //物理停止
+            Rigidbody2D rb = GetComponent<Rigidbody2D>();
+            if (rb != null)
+            {
+                rb.linearVelocity = Vector2.zero;
+                rb.bodyType = RigidbodyType2D.Kinematic;
+            }
+
+            //衝突しないようにトリガー化(柄のめり込み防止)
+            Collider2D col = GetComponent<Collider2D>();
+            if (col != null)
+            {
+                col.isTrigger = true;
+            }
+
+            //プレイヤーカウンターに通知
+            PlayerCounter counter = other.GetComponentInParent<PlayerCounter>();
+            if (counter != null)
+
+            {
+                Debug.Log("PlayerCounter に AddPlayer を呼び出す");
+                counter.AddPlayer();
+            }
+        }
+
+        //他のナイフに刺さった時→
+        if (other.CompareTag("Player"))
+        {
+            Debug.Log("ナイフ同士が衝突!ゲームオーバー!");
+        }
+    }
+}
