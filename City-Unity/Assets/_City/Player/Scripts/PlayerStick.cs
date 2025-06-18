@@ -19,6 +19,9 @@ public class PlayerStick : MonoBehaviour
             //的にくっつけて回転
             transform.SetParent(other.transform);
 
+            //刺さった位置を少し奥に移動
+            transform.position += transform.up * 0.5f;
+
             //物理停止
             Rigidbody2D rb = GetComponent<Rigidbody2D>();
             if (rb != null)
@@ -32,6 +35,13 @@ public class PlayerStick : MonoBehaviour
             if (col != null)
             {
                 col.isTrigger = true;
+            }
+
+            //Targetにヒット演出
+            TargetHitFeedback feedback = other.GetComponent<TargetHitFeedback>();
+            if (feedback != null)
+            {
+                feedback.PlayHitEffect();
             }
 
             //プレイヤーカウンターに通知
