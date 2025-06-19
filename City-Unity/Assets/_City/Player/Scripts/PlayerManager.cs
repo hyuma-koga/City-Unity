@@ -1,4 +1,5 @@
 using UnityEngine;
+using UnityEngine.EventSystems;
 
 public class PlayerManager : MonoBehaviour
 {
@@ -11,6 +12,12 @@ public class PlayerManager : MonoBehaviour
 
     private void Update()
     {
+
+        if (EventSystem.current.IsPointerOverGameObject())
+        {
+            return;
+        }
+
         if (Input.GetMouseButtonDown(0))
         {
             shooter?.ShootCurrentPlayer();

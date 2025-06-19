@@ -8,7 +8,7 @@ public class PlayerShooter : MonoBehaviour
     [SerializeField] private float shootSpeed = 20f;
     [SerializeField] private float spawnDelay = 0.05f;
     [SerializeField] private PlayerCounter playerCounter;
-    [SerializeField] private KnifeUIManager knifeUIManager;
+    [SerializeField] private GameHUDController gameHUDController;
 
     private GameObject currentPlayer;
     private int remainingKnives;
@@ -18,7 +18,7 @@ public class PlayerShooter : MonoBehaviour
         if (playerCounter != null)
         {
             remainingKnives = playerCounter.GetPlayerToBreak();
-            knifeUIManager.InitializeIcons(remainingKnives);
+            gameHUDController.InitializeIcons(remainingKnives);
         }
 
         SpawnNextPlayer();
@@ -45,7 +45,7 @@ public class PlayerShooter : MonoBehaviour
 
         currentPlayer = null;
         remainingKnives--;
-        knifeUIManager.UseOneKnife();
+        gameHUDController.UseOneKnife();
 
         if (remainingKnives > 0)
         {

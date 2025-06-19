@@ -2,13 +2,18 @@ using UnityEngine;
 using UnityEngine.UI;
 using System.Collections.Generic;
 
-public class KnifeUIManager : MonoBehaviour
+public class GameHUDController : MonoBehaviour
 {
+    [Header("ナイフアイコン設定")]
     [SerializeField] private GameObject knifeIconPrefab;
     [SerializeField] private Transform knifeContainer;
 
+    [Header("リンゴスコア表示")]
+    [SerializeField] private Text appleScoreGameText;
+
     private List<GameObject> knifeIcons = new List<GameObject>();
 
+    //ナイフアイコン初期化
     public void InitializeIcons(int count)
     {
         //既存のアイコンを削除
@@ -27,6 +32,7 @@ public class KnifeUIManager : MonoBehaviour
         }
     }
 
+    //ナイフ一本使用
     public void UseOneKnife()
     {
         if(knifeIcons.Count == 0)
@@ -37,5 +43,14 @@ public class KnifeUIManager : MonoBehaviour
         GameObject lastIcon = knifeIcons[knifeIcons.Count - 1];
         Destroy(lastIcon);
         knifeIcons.RemoveAt(knifeIcons.Count - 1);
+    }
+
+    //リンゴスコア更新
+    public void UpdateAppleScore(int score)
+    {
+        if (appleScoreGameText != null)
+        {
+            appleScoreGameText.text = score.ToString();
+        }
     }
 }
