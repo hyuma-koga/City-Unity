@@ -1891,6 +1891,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   appleScoreText: {fileID: 1624994807}
+  knifeHitScoreText: {fileID: 1326432871}
 --- !u!1 &585454804
 GameObject:
   m_ObjectHideFlags: 0
@@ -2025,7 +2026,7 @@ MonoBehaviour:
     m_HorizontalOverflow: 0
     m_VerticalOverflow: 0
     m_LineSpacing: 1
-  m_Text: 20
+  m_Text: 0
 --- !u!222 &590753626
 CanvasRenderer:
   m_ObjectHideFlags: 0
@@ -2219,7 +2220,7 @@ MonoBehaviour:
     m_HorizontalOverflow: 0
     m_VerticalOverflow: 0
     m_LineSpacing: 1
-  m_Text: 20
+  m_Text: 0
 --- !u!222 &834018611
 CanvasRenderer:
   m_ObjectHideFlags: 0
@@ -2419,6 +2420,7 @@ MonoBehaviour:
   knifeIconPrefab: {fileID: 666112656943667588, guid: 54362be48e9140c449af8e9740bd2909, type: 3}
   knifeContainer: {fileID: 1077485373}
   appleScoreGameText: {fileID: 1320181764}
+  knifeHitScoreText: {fileID: 2102264083}
 --- !u!114 &1077485376
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -2871,7 +2873,7 @@ MonoBehaviour:
     m_HorizontalOverflow: 0
     m_VerticalOverflow: 0
     m_LineSpacing: 1
-  m_Text: 90
+  m_Text: 0
 --- !u!222 &1326432872
 CanvasRenderer:
   m_ObjectHideFlags: 0
@@ -3422,6 +3424,10 @@ MonoBehaviour:
   - {fileID: 254616630}
   defaultColor: {r: 1, g: 1, b: 1, a: 1}
   highlightColor: {r: 1, g: 0.92156863, b: 0.015686275, a: 1}
+  hitScoreText_Title: {fileID: 1326432871}
+  hitScoreText_Game: {fileID: 2102264083}
+  hitScoreText_GameOver: {fileID: 834018610}
+  hitScoreText_GameClear: {fileID: 590753625}
 --- !u!1 &1624994805
 GameObject:
   m_ObjectHideFlags: 0
@@ -4402,6 +4408,7 @@ MonoBehaviour:
   panel: {fileID: 2063037798}
   appleScoreText: {fileID: 1835944527}
   stageNameText: {fileID: 252864640}
+  hitScoreText: {fileID: 590753625}
 --- !u!1 &2080415394
 GameObject:
   m_ObjectHideFlags: 0
@@ -4490,7 +4497,7 @@ GameObject:
   - component: {fileID: 2102264083}
   - component: {fileID: 2102264085}
   m_Layer: 5
-  m_Name: Text (Legacy)
+  m_Name: Score_Text
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -4548,7 +4555,7 @@ MonoBehaviour:
     m_HorizontalOverflow: 0
     m_VerticalOverflow: 0
     m_LineSpacing: 1
-  m_Text: 50
+  m_Text: 0
 --- !u!222 &2102264084
 CanvasRenderer:
   m_ObjectHideFlags: 0

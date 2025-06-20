@@ -17,6 +17,8 @@ public class PlayerStick : MonoBehaviour
         {
             hasStuck = true;
 
+            UIManager.Instance?.AddKnifeHitScore(1);
+
             //“I‚É‚­‚Á‚Â‚¯‚Ä‰ñ“]
             transform.SetParent(other.transform);
 

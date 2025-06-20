@@ -16,6 +16,10 @@ public class TargetBreaker : MonoBehaviour
             return;
         }
 
+        isBroken = true;
+
+        UIManager.Instance.AddKnifeHitScore(1);
+
         foreach (var renderer in GetComponentsInChildren<SpriteRenderer>())
         {
             renderer.enabled = false;

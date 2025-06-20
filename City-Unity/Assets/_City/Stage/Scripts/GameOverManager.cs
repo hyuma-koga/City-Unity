@@ -79,7 +79,8 @@ public class GameOverManager : MonoBehaviour
         int appleScore = UIManager.Instance.GetCurrentAppleScore();
         string stageName = StageManager.Instance.GetCurrentStageData().stageDisplayName;
 
-        gameClearUIController?.Show(appleScore, stageName);
+        int hitScore = UIManager.Instance.GetKnifeHitScore(); // ← ナイフヒットスコア取得
+        gameClearUIController?.Show(appleScore, stageName, hitScore); // ← 追加引数
 
         StartCoroutine(ReturnToTitleAfterDelay(3f));
     }

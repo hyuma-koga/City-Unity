@@ -11,6 +11,9 @@ public class GameHUDController : MonoBehaviour
     [Header("リンゴスコア表示")]
     [SerializeField] private Text appleScoreGameText;
 
+    [Header("ナイフヒットスコア表示")]
+    [SerializeField] private Text knifeHitScoreText;
+
     private List<GameObject> knifeIcons = new List<GameObject>();
 
     //ナイフアイコン初期化
@@ -51,6 +54,14 @@ public class GameHUDController : MonoBehaviour
         if (appleScoreGameText != null)
         {
             appleScoreGameText.text = score.ToString();
+        }
+    }
+
+    public void UpdateKnifeHitScore(int score)
+    {
+        if (knifeHitScoreText != null)
+        {
+            knifeHitScoreText.text = score.ToString();
         }
     }
 }
