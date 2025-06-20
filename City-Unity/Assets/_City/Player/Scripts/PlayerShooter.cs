@@ -12,22 +12,20 @@ public class PlayerShooter : MonoBehaviour
 
     private GameObject currentPlayer;
     private int remainingKnives;
+    private bool hasSpawned = false;
 
     private void Start()
     {
-        if (playerCounter != null)
-        {
-            remainingKnives = playerCounter.GetPlayerToBreak();
-            gameHUDController.InitializeIcons(remainingKnives);
-        }
+        if (StageManager.Instance == null) return;
 
-        SpawnNextPlayer();
+        ResetKnifeCountFromStageData();
     }
 
     public void ShootCurrentPlayer()
     {
         if (currentPlayer == null || remainingKnives <= 0)
         {
+            Debug.LogError("currentPlayer が null です！");
             return;
         }
 
@@ -38,14 +36,11 @@ public class PlayerShooter : MonoBehaviour
         }
 
         PlayerMover mover = currentPlayer.GetComponent<PlayerMover>();
-        if (mover != null)
-        {
-            mover.Launch(Vector2.up * shootSpeed);
-        }
+        mover?.Launch(Vector2.up * shootSpeed);
 
         currentPlayer = null;
         remainingKnives--;
-        gameHUDController.UseOneKnife();
+        gameHUDController?.UseOneKnife();
 
         if (remainingKnives > 0)
         {
@@ -65,6 +60,24 @@ public class PlayerShooter : MonoBehaviour
 
     private void SpawnNextPlayer()
     {
+        if (hasSpawned)
+        {
+            return;
+        }
+
+        hasSpawned = true;
+
+        if (spawnPoint == null)
+        {
+            Debug.LogWarning("SpawnPointが設定されていません！");
+            return;
+        }
+
+        if (currentPlayer != null)
+        {
+            Destroy(currentPlayer);
+        }
+
         currentPlayer = Instantiate(playerPrefab, spawnPoint.position, Quaternion.identity);
 
         Rigidbody2D rb = currentPlayer.GetComponent<Rigidbody2D>();
@@ -75,15 +88,15 @@ public class PlayerShooter : MonoBehaviour
         }
 
         StartCoroutine(AnimateSpawn(currentPlayer, spawnPoint.position));
+        StartCoroutine(ResetSpawnFlagAfterDelay());
     }
 
     private IEnumerator AnimateSpawn(GameObject player, Vector3 targetPosition, float duration = 0.5f)
     {
+        if (player == null) yield break; // 生成直後に消されていたら終了
+
         SpriteRenderer sr = player.GetComponent<SpriteRenderer>();
-        if (sr != null)
-        {
-            sr.color = new Color(1f, 1f, 1f, 0f);
-        }
+        if (sr != null) sr.color = new Color(1f, 1f, 1f, 0f);
 
         Vector3 startPos = targetPosition + new Vector3(0f, -1.5f, 0f);
         float timer = 0f;
@@ -92,23 +105,55 @@ public class PlayerShooter : MonoBehaviour
 
         while (timer < duration)
         {
+            if (player == null) yield break; // ← 毎フレーム確認して安全に抜ける
+
             timer += Time.deltaTime;
             float t = timer / duration;
 
             player.transform.position = Vector3.Lerp(startPos, targetPosition, t);
-
-            if (sr != null)
-            {
-                sr.color = new Color(1f, 1f, 1f, t);
-            }
+            if (sr != null) sr.color = new Color(1f, 1f, 1f, t);
 
             yield return null;
         }
 
+        if (player == null) yield break;
+
         player.transform.position = targetPosition;
-        if (sr != null)
+        if (sr != null) sr.color = Color.white;
+    }
+
+    public void ResetKnifeCountFromStageData()
+    {
+        StageData data = StageManager.Instance?.GetCurrentStageData();
+        if (data == null) return;
+
+        remainingKnives = data.knifeCount;
+        gameHUDController?.InitializeIcons(remainingKnives);
+        SpawnNextPlayer();
+    }
+
+    public void SetSpawnPoint(Transform newSpawnPoint)
+    {
+        spawnPoint = newSpawnPoint;
+    }
+
+    public void SetPlayerCounter(PlayerCounter counter)
+    {
+        playerCounter = counter;
+    }
+
+    private IEnumerator ResetSpawnFlagAfterDelay()
+    {
+        yield return new WaitForSeconds(0.1f); // 少しだけ時間を置いてリセット
+        hasSpawned = false;
+    }
+
+    public void ForceClearCurrentPlayer()
+    {
+        if (currentPlayer != null)
         {
-            sr.color = Color.white;
+            Destroy(currentPlayer);
+            currentPlayer = null;
         }
     }
 }

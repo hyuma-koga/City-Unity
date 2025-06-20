@@ -28,7 +28,9 @@ public class UIManager : MonoBehaviour
         ShowTitleUI(); // 起動時にタイトル画面を表示
     }
 
-    // りんごスコア更新
+    /// <summary>
+    /// リンゴスコアを更新し、全UIに反映
+    /// </summary>
     public void UpdateAppleScore(int score)
     {
         currentAppleScore = score;
@@ -40,26 +42,50 @@ public class UIManager : MonoBehaviour
 
         if (titleUIController != null)
         {
-            titleUIController.SetAppleScore(score);
+            titleUIController.SetAppleScore(score); // ★ここでタイトルUIにも反映
         }
     }
 
-    // タイトル画面を表示
+    /// <summary>
+    /// タイトル画面を表示し、スコアなどを表示
+    /// </summary>
     public void ShowTitleUI()
     {
         titleUI.SetActive(true);
         gameUI.SetActive(false);
         Time.timeScale = 0f;
 
-        // 起動時スコア表示（仮：0）
         titleUIController?.SetAppleScore(currentAppleScore);
     }
 
-    // ゲーム開始処理
+    /// <summary>
+    /// ゲームを開始（UIとタイムスケール切り替え）
+    /// </summary>
     public void StartGame()
     {
         titleUI.SetActive(false);
         gameUI.SetActive(true);
         Time.timeScale = 1f;
+
+        currentAppleScore = 0;
+        UpdateAppleScore(currentAppleScore);
+
+        // ステージデータから初期ナイフ数を取得してUI初期化
+        int knifeCount = StageManager.Instance.GetCurrentStageData().knifeCount;
+        gameHUDController?.InitializeIcons(knifeCount);
+    }
+
+    /// <summary>
+    /// ステージ変更時のUI更新
+    /// </summary>
+    public void OnStageChanged(int stageIndex)
+    {
+        // ステージに応じた演出やUI変更が必要であれば追加
+        // 例えばステージレベル表示やステージ名更新など
+    }
+
+    public GameHUDController GetGameHUDController()
+    {
+        return gameHUDController;
     }
 }

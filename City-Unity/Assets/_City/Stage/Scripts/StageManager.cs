@@ -11,6 +11,9 @@ public class StageManager : MonoBehaviour
     [SerializeField] private GameObject bossNoticeUI;
     [SerializeField] private float bossNoticeDuration = 1f;
 
+    [SerializeField] private StageData[] stageDatas;
+    [SerializeField] private PlayerShooter playerShooter;
+
     private int currentStageIndex = 0;
     private GameObject currentStage;
 
@@ -57,7 +60,34 @@ public class StageManager : MonoBehaviour
 
     private void LoadStage(int index)
     {
-        currentStage = Instantiate(stagePrefabs[index], stageParent);
+        GameObject stage = Instantiate(stagePrefabs[index], stageParent);
+        currentStage = stage;
+
+        Transform spawn = stage.transform.Find("SpawnPoint"); // ← ステージPrefab内に SpawnPoint がある前提
+        if (spawn != null && playerShooter != null)
+        {
+            playerShooter.SetSpawnPoint(spawn); // PlayerShooter に渡す
+        }
+
+        PlayerCounter counter = stage.GetComponentInChildren<PlayerCounter>();
+        if (counter != null && playerShooter != null)
+        {
+            playerShooter.SetPlayerCounter(counter);
+        }
+
+        playerShooter?.ResetKnifeCountFromStageData();
+        UIManager.Instance?.UpdateAppleScore(GetCurrentStageData().initialAppleCount);
+
+        // AppleManager に必要な参照をセット
+        AppleManager appleManager = stage.GetComponentInChildren<AppleManager>();
+        if (appleManager != null)
+        {
+            ApplePlacer placer = appleManager.GetComponentInChildren<ApplePlacer>();
+            if (placer != null)
+            {
+                appleManager.SetDependencies(placer, UIManager.Instance.GetGameHUDController());
+            }
+        }
     }
 
     private IEnumerator ShowBossStageUIAndLoad() // ← 名前を一致させる
@@ -65,6 +95,23 @@ public class StageManager : MonoBehaviour
         bossNoticeUI.SetActive(true);
         yield return new WaitForSecondsRealtime(bossNoticeDuration);
         bossNoticeUI.SetActive(false);
+        LoadStage(currentStageIndex);
+    }
+
+    public StageData GetCurrentStageData()
+    {
+        return stageDatas[currentStageIndex];
+    }
+
+    public void RestartFromBeginning()
+    {
+        currentStageIndex = 0;
+
+        if (currentStage != null)
+        {
+            Destroy(currentStage);
+        }
+
         LoadStage(currentStageIndex);
     }
 }

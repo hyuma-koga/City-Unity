@@ -1,3 +1,4 @@
+using System.Collections;
 using UnityEngine;
 
 public class TargetBreaker : MonoBehaviour
@@ -6,8 +7,25 @@ public class TargetBreaker : MonoBehaviour
     [SerializeField] private int spawnCount = 24;
     [SerializeField] private float scatterForce = 5f;
 
+    private bool isBroken = false;
+
     public void TriggerBreak()
     {
+        if (isBroken)
+        {
+            return;
+        }
+
+        foreach (var renderer in GetComponentsInChildren<SpriteRenderer>())
+        {
+            renderer.enabled = false;
+        }
+
+        foreach (var collider in GetComponents<Collider2D>())
+        {
+            collider.enabled = false;
+        }
+
         for (int i = 0; i < spawnCount; i++)
         {
             if (fragmentPrefabs == null || fragmentPrefabs.Length == 0)
@@ -28,6 +46,18 @@ public class TargetBreaker : MonoBehaviour
                 Vector2 dir = Random.insideUnitCircle.normalized;
                 rb.AddForce(dir * scatterForce, ForceMode2D.Impulse);
             }
+        }
+
+        StartCoroutine(DestroyAndLoadNextStage());
+    }
+
+    private IEnumerator DestroyAndLoadNextStage()
+    {
+        yield return new WaitForSeconds(1f);
+
+        if(StageManager.Instance != null)
+        {
+            StageManager.Instance.LoadNextStage();
         }
 
         Destroy(gameObject);

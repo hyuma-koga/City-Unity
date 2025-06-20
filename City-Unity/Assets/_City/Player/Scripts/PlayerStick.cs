@@ -2,6 +2,7 @@ using UnityEngine;
 
 public class PlayerStick : MonoBehaviour
 {
+    [SerializeField] private float bounceForce = 5f;
     private bool hasStuck = false;
 
     private void OnTriggerEnter2D(Collider2D other)
@@ -57,6 +58,20 @@ public class PlayerStick : MonoBehaviour
         if (other.CompareTag("Player"))
         {
             Debug.Log("ナイフ同士が衝突!ゲームオーバー!");
+
+            //弾き返し
+            Rigidbody2D rb = GetComponent<Rigidbody2D>();
+            if(rb != null)
+            {
+                Vector2 dir = (transform.position - other.transform.position).normalized;
+                rb.AddForce(dir * bounceForce, ForceMode2D.Impulse);
+            }
+
+            //ゲームオーバー処理
+            if(GameOverManager.Instance != null)
+            {
+                GameOverManager.Instance.ShowGameOver();
+            }
         }
     }
 }
