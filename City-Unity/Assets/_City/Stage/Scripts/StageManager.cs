@@ -17,6 +17,12 @@ public class StageManager : MonoBehaviour
     private int currentStageIndex = 0;
     private GameObject currentStage;
 
+
+    private void Start()
+    {
+        LoadStage(currentStageIndex);
+    }
+
     private void Awake()
     {
         if (Instance == null)
@@ -27,11 +33,6 @@ public class StageManager : MonoBehaviour
         {
             Destroy(gameObject);
         }
-    }
-
-    private void Start()
-    {
-        LoadStage(currentStageIndex);
     }
 
     public void LoadNextStage() // ← スペル修正
@@ -60,8 +61,27 @@ public class StageManager : MonoBehaviour
 
     private void LoadStage(int index)
     {
+        Debug.Log($"Loading stage: {index}");
+
+        if (index < 0 || index >= stagePrefabs.Length)
+        {
+            Debug.LogError("Invalid stage index!");
+            return;
+        }
+
         GameObject stage = Instantiate(stagePrefabs[index], stageParent);
         currentStage = stage;
+
+        StageData data = stageDatas[index];
+        if (data == null)
+        {
+            Debug.LogError("StageData is null at index " + index);
+        }
+        else
+        {
+            Debug.Log("Stage Display Name: " + data.stageDisplayName);
+            UIManager.Instance?.UpdateStageName(data.stageDisplayName);
+        }
 
         Transform spawn = stage.transform.Find("SpawnPoint"); // ← ステージPrefab内に SpawnPoint がある前提
         if (spawn != null && playerShooter != null)
@@ -86,6 +106,8 @@ public class StageManager : MonoBehaviour
                 appleManager.SetDependencies(placer, UIManager.Instance.GetGameHUDController());
             }
         }
+
+        UIManager.Instance?.UpdateStageProgressVisual(index);
     }
 
     private IEnumerator ShowBossStageUIAndLoad() // ← 名前を一致させる

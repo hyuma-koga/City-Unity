@@ -1,4 +1,5 @@
 using UnityEngine;
+using UnityEngine.UI;
 
 public class UIManager : MonoBehaviour
 {
@@ -8,6 +9,14 @@ public class UIManager : MonoBehaviour
     [SerializeField] private GameObject gameUI;
     [SerializeField] private TitleUIController titleUIController;
     [SerializeField] private GameHUDController gameHUDController;
+    [SerializeField] private Text stageNameText_Title;
+    [SerializeField] private Text stageNameText_Game;
+    [SerializeField] private Text stageNameText_GameOver;
+
+    [Header("ステージ進行イメージ")]
+    [SerializeField] private Image[] stageImages;  
+    [SerializeField] private Color defaultColor = Color.white;
+    [SerializeField] private Color highlightColor = Color.yellow;
 
     private int currentAppleScore = 0;
 
@@ -65,6 +74,9 @@ public class UIManager : MonoBehaviour
         Time.timeScale = 0f;
 
         titleUIController?.SetAppleScore(currentAppleScore);
+
+        var currentStageData = StageManager.Instance.GetCurrentStageData();
+        UpdateStageName(currentStageData.stageDisplayName);
     }
 
     /// <summary>
@@ -77,6 +89,9 @@ public class UIManager : MonoBehaviour
         Time.timeScale = 1f;
 
         UpdateAppleScore(currentAppleScore);
+
+        var currentStageData = StageManager.Instance.GetCurrentStageData();
+        UpdateStageName(currentStageData.stageDisplayName);
 
         // ステージデータから初期ナイフ数を取得してUI初期化
         int knifeCount = StageManager.Instance.GetCurrentStageData().knifeCount;
@@ -96,4 +111,21 @@ public class UIManager : MonoBehaviour
         return currentAppleScore;
     }
 
+    public void UpdateStageName(string stageName)
+    {
+        if (stageNameText_Title != null) stageNameText_Title.text = stageName;
+        if (stageNameText_Game != null) stageNameText_Game.text = stageName;
+        if (stageNameText_GameOver != null) stageNameText_GameOver.text = stageName;
+    }
+
+    public void UpdateStageProgressVisual(int currentIndex)
+    {
+        for (int i = 0; i < stageImages.Length; i++)
+        {
+            if (stageImages[i] != null)
+            {
+                stageImages[i].color = (i == currentIndex) ? highlightColor : defaultColor;
+            }
+        }
+    }
 }

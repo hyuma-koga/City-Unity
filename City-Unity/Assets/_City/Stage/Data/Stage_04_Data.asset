@@ -14,5 +14,4 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   stagePrefab: {fileID: 515840121459015004, guid: 0d6673a94f2784f4e923c7455c6ccc5c, type: 3}
   knifeCount: 8
-  difficulty: 4
-  initialAppleCount: 0
+  stageDisplayName: 4

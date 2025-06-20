@@ -8,4 +8,7 @@ public class StageData : ScriptableObject
 
     [Header("ナイフ本数")]
     public int knifeCount = 5;
+
+    [Header("ステージ表示名")]
+    public string stageDisplayName = "1";
 }
