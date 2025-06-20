@@ -47,6 +47,15 @@ public class UIManager : MonoBehaviour
     }
 
     /// <summary>
+    /// 指定した数だけリンゴスコアを加算
+    /// </summary>
+    public void AddAppleScore(int amount)
+    {
+        currentAppleScore += amount;
+        UpdateAppleScore(currentAppleScore); // UIにも反映
+    }
+
+    /// <summary>
     /// タイトル画面を表示し、スコアなどを表示
     /// </summary>
     public void ShowTitleUI()
@@ -67,7 +76,6 @@ public class UIManager : MonoBehaviour
         gameUI.SetActive(true);
         Time.timeScale = 1f;
 
-        currentAppleScore = 0;
         UpdateAppleScore(currentAppleScore);
 
         // ステージデータから初期ナイフ数を取得してUI初期化
@@ -75,17 +83,17 @@ public class UIManager : MonoBehaviour
         gameHUDController?.InitializeIcons(knifeCount);
     }
 
-    /// <summary>
-    /// ステージ変更時のUI更新
-    /// </summary>
-    public void OnStageChanged(int stageIndex)
-    {
-        // ステージに応じた演出やUI変更が必要であれば追加
-        // 例えばステージレベル表示やステージ名更新など
-    }
-
     public GameHUDController GetGameHUDController()
     {
         return gameHUDController;
     }
+
+    /// <summary>
+    /// 現在のリンゴスコアを取得
+    /// </summary>
+    public int GetCurrentAppleScore()
+    {
+        return currentAppleScore;
+    }
+
 }

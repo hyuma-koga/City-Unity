@@ -34,9 +34,5 @@ public class GameManager : MonoBehaviour
         }
 
         currentPlayer = Instantiate(playerPrefab, spawnPos, Quaternion.identity, playerParent);
-
-        // KnifeManagerやスコアリセットなどがあればここで呼び出し
-        // KnifeManager.Instance.InitializeKnives();
-        // ScoreManager.Instance.ResetScore();
     }
 }

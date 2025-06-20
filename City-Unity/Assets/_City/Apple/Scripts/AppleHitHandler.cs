@@ -28,6 +28,7 @@ public class AppleHitHandler : MonoBehaviour
                 appleManager.AddApplePoint();
             }
 
+            UIManager.Instance?.AddAppleScore(1);
             BreakApple();
         }
     }
@@ -40,7 +41,7 @@ public class AppleHitHandler : MonoBehaviour
         GameObject left = Instantiate(brokenLeftPrefab, transform.position, originalRotation);
         GameObject right = Instantiate(brokenRightPrefab, transform.position, originalRotation);
 
-        // ✅ スケールを明示的に設定（元のリンゴと同じにしたいなら数値で指定）
+        // スケールを明示的に設定（元のリンゴと同じにしたいなら数値で指定）
         Vector3 fixedScale = new Vector3(0.45f, 0.45f, 1f);
         left.transform.localScale = fixedScale;
         right.transform.localScale = fixedScale;

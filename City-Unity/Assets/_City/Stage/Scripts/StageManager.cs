@@ -76,9 +76,7 @@ public class StageManager : MonoBehaviour
         }
 
         playerShooter?.ResetKnifeCountFromStageData();
-        UIManager.Instance?.UpdateAppleScore(GetCurrentStageData().initialAppleCount);
-
-        // AppleManager に必要な参照をセット
+        UIManager.Instance?.UpdateAppleScore(UIManager.Instance.GetCurrentAppleScore());
         AppleManager appleManager = stage.GetComponentInChildren<AppleManager>();
         if (appleManager != null)
         {

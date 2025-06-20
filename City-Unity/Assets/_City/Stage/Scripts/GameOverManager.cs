@@ -1,4 +1,5 @@
 using UnityEngine;
+using UnityEngine.UI;
 
 public class GameOverManager : MonoBehaviour
 {
@@ -8,6 +9,7 @@ public class GameOverManager : MonoBehaviour
     [SerializeField] private GameObject gameOverUI;
     [SerializeField] private GameObject titleUI;
     [SerializeField] private GameObject gameUI;
+    [SerializeField] private Text appleScoreText;
 
     [Header("ÉQÅ[ÉÄä÷òA")]
     [SerializeField] private StageManager stageManager;
@@ -32,6 +34,11 @@ public class GameOverManager : MonoBehaviour
         gameOverUI?.SetActive(true);
         gameUI?.SetActive(false);
         player?.SetActive(false);
+        int score = UIManager.Instance.GetCurrentAppleScore();
+        if (appleScoreText != null)
+        {
+            appleScoreText.text = $"{score}";
+        }
     }
 
     public void RestartGame()
