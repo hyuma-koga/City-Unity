@@ -17,7 +17,6 @@ public class StageManager : MonoBehaviour
     private int currentStageIndex = 0;
     private GameObject currentStage;
 
-
     private void Start()
     {
         LoadStage(currentStageIndex);
@@ -98,6 +97,7 @@ public class StageManager : MonoBehaviour
         playerShooter?.ResetKnifeCountFromStageData();
         UIManager.Instance?.UpdateAppleScore(UIManager.Instance.GetCurrentAppleScore());
         AppleManager appleManager = stage.GetComponentInChildren<AppleManager>();
+        
         if (appleManager != null)
         {
             ApplePlacer placer = appleManager.GetComponentInChildren<ApplePlacer>();
@@ -106,7 +106,7 @@ public class StageManager : MonoBehaviour
                 appleManager.SetDependencies(placer, UIManager.Instance.GetGameHUDController());
             }
         }
-        
+
         UIManager.Instance?.UpdateStageProgressVisual(index);
     }
 
@@ -133,6 +133,9 @@ public class StageManager : MonoBehaviour
         }
 
         LoadStage(currentStageIndex);
+
+        // ステージ進行ビジュアルも0に戻す
+        UIManager.Instance?.UpdateStageProgressVisual(currentStageIndex);
     }
 
     public bool IsLastStage()

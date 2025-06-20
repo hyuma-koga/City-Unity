@@ -3416,6 +3416,7 @@ MonoBehaviour:
   stageNameText_Title: {fileID: 424650670}
   stageNameText_Game: {fileID: 1700322055}
   stageNameText_GameOver: {fileID: 1398233076}
+  player: {fileID: 1975399110022226609, guid: 554aa4ebcdcb2444e88626421caecf7d, type: 3}
   stageImages:
   - {fileID: 10407914}
   - {fileID: 1718907817}

@@ -6,31 +6,25 @@ public class GameOverManager : MonoBehaviour
 {
     public static GameOverManager Instance;
 
-    [Header("UI関連")]
+    [Header("UI髢｢騾｣")]
     [SerializeField] private GameObject gameOverUI;
     [SerializeField] private GameObject titleUI;
     [SerializeField] private GameObject gameUI;
     [SerializeField] private Text appleScoreText;
 
-    [Header("ゲーム関連")]
+    [Header("繧ｲ繝ｼ繝髢｢騾｣")]
     [SerializeField] private StageManager stageManager;
     [SerializeField] private PlayerShooter playerShooter;
     [SerializeField] private GameObject player;
 
-    [Header("ゲームクリアUI")]
+    [Header("繧ｲ繝ｼ繝繧ｯ繝ｪ繧｢UI")]
     [SerializeField] private GameObject gameClearUI;
     [SerializeField] private GameClearUIController gameClearUIController;
 
     private void Awake()
     {
-        if (Instance == null)
-        {
-            Instance = this;
-        }
-        else
-        {
-            Destroy(gameObject);
-        }
+        if (Instance == null) Instance = this;
+        else Destroy(gameObject);
     }
 
     public void ShowGameOver()
@@ -39,6 +33,7 @@ public class GameOverManager : MonoBehaviour
         gameOverUI?.SetActive(true);
         gameUI?.SetActive(false);
         player?.SetActive(false);
+
         int score = UIManager.Instance.GetCurrentAppleScore();
         if (appleScoreText != null)
         {
@@ -51,22 +46,27 @@ public class GameOverManager : MonoBehaviour
         Time.timeScale = 1f;
         gameOverUI?.SetActive(false);
         gameUI?.SetActive(true);
-        player?.SetActive(true);
 
-        Rigidbody2D rb = player.GetComponent<Rigidbody2D>();
-        if (rb != null) rb.simulated = true;
+        UIManager.Instance.UpdateAppleScore(0);
+        UIManager.Instance.UpdateKnifeHitScore(0);
 
+        playerShooter?.ResetPlayerState();
         stageManager.RestartFromBeginning();
-        playerShooter.ResetKnifeCountFromStageData();
     }
 
     public void ReturnToTitle()
     {
         Time.timeScale = 0f;
         gameOverUI?.SetActive(false);
+        gameClearUI?.SetActive(false);
         gameUI?.SetActive(false);
         titleUI?.SetActive(true);
-        player?.SetActive(false);
+
+        UIManager.Instance.UpdateAppleScore(0);
+        UIManager.Instance.UpdateKnifeHitScore(0);
+
+        playerShooter?.ResetPlayerState();
+        stageManager.RestartFromBeginning();
     }
 
     public void ShowGameClear()
@@ -78,9 +78,9 @@ public class GameOverManager : MonoBehaviour
 
         int appleScore = UIManager.Instance.GetCurrentAppleScore();
         string stageName = StageManager.Instance.GetCurrentStageData().stageDisplayName;
+        int hitScore = UIManager.Instance.GetKnifeHitScore();
 
-        int hitScore = UIManager.Instance.GetKnifeHitScore(); // ← ナイフヒットスコア取得
-        gameClearUIController?.Show(appleScore, stageName, hitScore); // ← 追加引数
+        gameClearUIController?.Show(appleScore, stageName, hitScore);
 
         StartCoroutine(ReturnToTitleAfterDelay(3f));
     }

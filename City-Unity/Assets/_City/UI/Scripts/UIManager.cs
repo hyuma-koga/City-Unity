@@ -12,6 +12,7 @@ public class UIManager : MonoBehaviour
     [SerializeField] private Text stageNameText_Title;
     [SerializeField] private Text stageNameText_Game;
     [SerializeField] private Text stageNameText_GameOver;
+    [SerializeField] private GameObject player;
 
     [Header("ステージ進行イメージ")]
     [SerializeField] private Image[] stageImages;  
@@ -44,9 +45,6 @@ public class UIManager : MonoBehaviour
         ShowTitleUI(); // 起動時にタイトル画面を表示
     }
 
-    /// <summary>
-    /// リンゴスコアを更新し、全UIに反映
-    /// </summary>
     public void UpdateAppleScore(int score)
     {
         currentAppleScore = score;
@@ -58,22 +56,16 @@ public class UIManager : MonoBehaviour
 
         if (titleUIController != null)
         {
-            titleUIController.SetAppleScore(score); // ★ここでタイトルUIにも反映
+            titleUIController.SetAppleScore(score); 
         }
     }
 
-    /// <summary>
-    /// 指定した数だけリンゴスコアを加算
-    /// </summary>
     public void AddAppleScore(int amount)
     {
         currentAppleScore += amount;
-        UpdateAppleScore(currentAppleScore); // UIにも反映
+        UpdateAppleScore(currentAppleScore); 
     }
 
-    /// <summary>
-    /// タイトル画面を表示し、スコアなどを表示
-    /// </summary>
     public void ShowTitleUI()
     {
         titleUI.SetActive(true);
@@ -86,17 +78,28 @@ public class UIManager : MonoBehaviour
         UpdateStageName(currentStageData.stageDisplayName);
     }
 
-    /// <summary>
-    /// ゲームを開始（UIとタイムスケール切り替え）
-    /// </summary>
     public void StartGame()
     {
         titleUI.SetActive(false);
         gameUI.SetActive(true);
         Time.timeScale = 1f;
 
-        UpdateAppleScore(currentAppleScore);
+        if (player != null)
+        {
+            player.SetActive(true); 
+            player.transform.position = new Vector3(0f, -4f, 0f); 
 
+            Rigidbody2D rb = player.GetComponent<Rigidbody2D>();
+            if (rb != null)
+            {
+                rb.simulated = true;
+                rb.linearVelocity = Vector2.zero;
+                rb.angularVelocity = 0f;
+                rb.rotation = 0f;
+            }
+        }
+
+        UpdateAppleScore(currentAppleScore);
         var currentStageData = StageManager.Instance.GetCurrentStageData();
         UpdateStageName(currentStageData.stageDisplayName);
 
@@ -110,9 +113,6 @@ public class UIManager : MonoBehaviour
         return gameHUDController;
     }
 
-    /// <summary>
-    /// 現在のリンゴスコアを取得
-    /// </summary>
     public int GetCurrentAppleScore()
     {
         return currentAppleScore;

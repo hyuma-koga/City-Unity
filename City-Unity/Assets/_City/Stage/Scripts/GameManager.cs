@@ -22,10 +22,6 @@ public class GameManager : MonoBehaviour
         }
     }
 
-    /// <summary>
-    /// プレイヤーをスポーンする（ステージ切り替え時にも呼ばれる）
-    /// </summary>
-    /// <param name="spawnPos">ステージ内のスポーン位置</param>
     public void SpawnPlayer(Vector3 spawnPos)
     {
         if (currentPlayer != null)

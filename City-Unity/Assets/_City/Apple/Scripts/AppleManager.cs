@@ -21,11 +21,9 @@ public class AppleManager : MonoBehaviour
         UIManager.Instance?.AddAppleScore(value);
     }
 
-
     public void SetDependencies(ApplePlacer placer, GameHUDController hud)
     {
         applePlacer = placer;
         gameHUDController = hud;
     }
-
 }

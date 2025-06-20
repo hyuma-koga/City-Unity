@@ -17,7 +17,10 @@ public class AppleHitHandler : MonoBehaviour
 
     private void OnTriggerEnter2D(Collider2D other)
     {
-        if (isHit) return;
+        if (isHit)
+        {
+            return;
+        }
 
         if (other.CompareTag("Player")) // ナイフと衝突したとき
         {

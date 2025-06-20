@@ -12,7 +12,6 @@ public class PlayerManager : MonoBehaviour
 
     private void Update()
     {
-
         if (EventSystem.current.IsPointerOverGameObject())
         {
             return;

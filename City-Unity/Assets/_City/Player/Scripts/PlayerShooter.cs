@@ -14,18 +14,11 @@ public class PlayerShooter : MonoBehaviour
     private int remainingKnives;
     private bool hasSpawned = false;
 
-    private void Start()
-    {
-        if (StageManager.Instance == null) return;
-
-        ResetKnifeCountFromStageData();
-    }
-
     public void ShootCurrentPlayer()
     {
         if (currentPlayer == null || remainingKnives <= 0)
         {
-            Debug.LogError("currentPlayer が null です！");
+            Debug.LogError("currentPlayer が null またはナイフが残っていません！");
             return;
         }
 
@@ -73,12 +66,10 @@ public class PlayerShooter : MonoBehaviour
             return;
         }
 
-        if (currentPlayer != null)
-        {
-            Destroy(currentPlayer);
-        }
+        ForceClearCurrentPlayer();
 
         currentPlayer = Instantiate(playerPrefab, spawnPoint.position, Quaternion.identity);
+        currentPlayer.SetActive(true);
 
         Rigidbody2D rb = currentPlayer.GetComponent<Rigidbody2D>();
         if (rb != null)
@@ -93,10 +84,16 @@ public class PlayerShooter : MonoBehaviour
 
     private IEnumerator AnimateSpawn(GameObject player, Vector3 targetPosition, float duration = 0.5f)
     {
-        if (player == null) yield break; // 生成直後に消されていたら終了
+        if (player == null)
+        {
+            yield break;
+        }
 
         SpriteRenderer sr = player.GetComponent<SpriteRenderer>();
-        if (sr != null) sr.color = new Color(1f, 1f, 1f, 0f);
+        if (sr != null)
+        {
+            sr.color = new Color(1f, 1f, 1f, 0f);
+        }
 
         Vector3 startPos = targetPosition + new Vector3(0f, -1.5f, 0f);
         float timer = 0f;
@@ -105,31 +102,56 @@ public class PlayerShooter : MonoBehaviour
 
         while (timer < duration)
         {
-            if (player == null) yield break; // ← 毎フレーム確認して安全に抜ける
+            if (player == null)
+            {
+                yield break;
+            }
 
             timer += Time.deltaTime;
             float t = timer / duration;
 
             player.transform.position = Vector3.Lerp(startPos, targetPosition, t);
-            if (sr != null) sr.color = new Color(1f, 1f, 1f, t);
+            if (sr != null)
+            {
+                sr.color = new Color(1f, 1f, 1f, t);
+            }
 
             yield return null;
         }
 
-        if (player == null) yield break;
-
+        if (player == null)
+        {
+            yield break;
+        }
         player.transform.position = targetPosition;
-        if (sr != null) sr.color = Color.white;
+        if (sr != null)
+        {
+            sr.color = Color.white;
+        }
     }
 
     public void ResetKnifeCountFromStageData()
     {
         StageData data = StageManager.Instance?.GetCurrentStageData();
-        if (data == null) return;
+        if (data == null)
+        {
+            return;
+        }
 
         remainingKnives = data.knifeCount;
         gameHUDController?.InitializeIcons(remainingKnives);
         SpawnNextPlayer();
+    }
+
+    public void ResetPlayerState()
+    {
+        ForceClearCurrentPlayer();
+
+        remainingKnives = 0;
+        hasSpawned = false;
+
+        // 初回ステージ情報に基づいてリセット
+        ResetKnifeCountFromStageData();
     }
 
     public void SetSpawnPoint(Transform newSpawnPoint)
@@ -144,7 +166,7 @@ public class PlayerShooter : MonoBehaviour
 
     private IEnumerator ResetSpawnFlagAfterDelay()
     {
-        yield return new WaitForSeconds(0.1f); // 少しだけ時間を置いてリセット
+        yield return new WaitForSeconds(0.1f);
         hasSpawned = false;
     }
 
