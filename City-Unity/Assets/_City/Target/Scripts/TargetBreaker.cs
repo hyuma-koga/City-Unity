@@ -55,9 +55,16 @@ public class TargetBreaker : MonoBehaviour
     {
         yield return new WaitForSeconds(1f);
 
-        if(StageManager.Instance != null)
+        if (StageManager.Instance != null)
         {
-            StageManager.Instance.LoadNextStage();
+            if (StageManager.Instance.IsLastStage())
+            {
+                GameOverManager.Instance.ShowGameClear(); // ゲームクリアUIを表示
+            }
+            else
+            {
+                StageManager.Instance.LoadNextStage(); // 通常の次ステージへ進む
+            }
         }
 
         Destroy(gameObject);

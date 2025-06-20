@@ -1,5 +1,6 @@
 using UnityEngine;
 using UnityEngine.UI;
+using System.Collections;
 
 public class GameOverManager : MonoBehaviour
 {
@@ -15,6 +16,10 @@ public class GameOverManager : MonoBehaviour
     [SerializeField] private StageManager stageManager;
     [SerializeField] private PlayerShooter playerShooter;
     [SerializeField] private GameObject player;
+
+    [Header("ÉQÅ[ÉÄÉNÉäÉAUI")]
+    [SerializeField] private GameObject gameClearUI;
+    [SerializeField] private GameClearUIController gameClearUIController;
 
     private void Awake()
     {
@@ -62,5 +67,27 @@ public class GameOverManager : MonoBehaviour
         gameUI?.SetActive(false);
         titleUI?.SetActive(true);
         player?.SetActive(false);
+    }
+
+    public void ShowGameClear()
+    {
+        Time.timeScale = 0f;
+        gameUI?.SetActive(false);
+        player?.SetActive(false);
+        gameClearUI?.SetActive(true);
+
+        int appleScore = UIManager.Instance.GetCurrentAppleScore();
+        string stageName = StageManager.Instance.GetCurrentStageData().stageDisplayName;
+
+        gameClearUIController?.Show(appleScore, stageName);
+
+        StartCoroutine(ReturnToTitleAfterDelay(3f));
+    }
+
+    private IEnumerator ReturnToTitleAfterDelay(float delay)
+    {
+        yield return new WaitForSecondsRealtime(delay);
+        gameClearUIController?.Hide();
+        ReturnToTitle();
     }
 }

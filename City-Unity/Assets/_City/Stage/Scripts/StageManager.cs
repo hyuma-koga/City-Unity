@@ -106,7 +106,7 @@ public class StageManager : MonoBehaviour
                 appleManager.SetDependencies(placer, UIManager.Instance.GetGameHUDController());
             }
         }
-
+        
         UIManager.Instance?.UpdateStageProgressVisual(index);
     }
 
@@ -133,5 +133,10 @@ public class StageManager : MonoBehaviour
         }
 
         LoadStage(currentStageIndex);
+    }
+
+    public bool IsLastStage()
+    {
+        return currentStageIndex == stagePrefabs.Length - 1;
     }
 }
