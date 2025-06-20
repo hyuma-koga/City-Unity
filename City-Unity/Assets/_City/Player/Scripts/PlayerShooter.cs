@@ -53,7 +53,7 @@ public class PlayerShooter : MonoBehaviour
 
     private void SpawnNextPlayer()
     {
-        if (hasSpawned)
+        if (hasSpawned || remainingKnives <= 0)
         {
             return;
         }
@@ -149,9 +149,6 @@ public class PlayerShooter : MonoBehaviour
 
         remainingKnives = 0;
         hasSpawned = false;
-
-        // 初回ステージ情報に基づいてリセット
-        ResetKnifeCountFromStageData();
     }
 
     public void SetSpawnPoint(Transform newSpawnPoint)
@@ -172,10 +169,14 @@ public class PlayerShooter : MonoBehaviour
 
     public void ForceClearCurrentPlayer()
     {
+        StopAllCoroutines();
+
         if (currentPlayer != null)
         {
             Destroy(currentPlayer);
             currentPlayer = null;
         }
+
+        hasSpawned = false;
     }
 }

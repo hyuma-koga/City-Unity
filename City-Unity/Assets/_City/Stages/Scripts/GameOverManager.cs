@@ -33,6 +33,10 @@ public class GameOverManager : MonoBehaviour
         gameOverUI?.SetActive(true);
         gameUI?.SetActive(false);
         player?.SetActive(false);
+        if (playerShooter != null)
+        {
+            playerShooter.ForceClearCurrentPlayer();
+        }
 
         int score = UIManager.Instance.GetCurrentAppleScore();
         if (appleScoreText != null)
